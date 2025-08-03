@@ -1,6 +1,22 @@
 import { Profile } from './profiles'
 
 /**
+ * 博客文章类型定义
+ */
+export interface Blog {
+  id: string
+  title: string
+  slug: string
+  subtitle?: string
+  image?: string
+  content: string
+  author: string
+  author_id: string
+  created_at: string
+  updated_at: string
+}
+
+/**
  * 数据库表定义
  */
 export interface Database {
@@ -10,6 +26,11 @@ export interface Database {
         Row: Profile
         Insert: Omit<Profile, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Profile, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
+      }
+      blogs: {
+        Row: Blog
+        Insert: Omit<Blog, 'id' | 'slug' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Blog, 'id' | 'slug' | 'author_id' | 'created_at' | 'updated_at'>>
       }
     }
     Views: {
