@@ -45,15 +45,14 @@ const Dropzone = ({
   return (
     <DropzoneContext.Provider value={{ ...restProps }}>
       <div
-        {...getRootProps({
-          className: cn(
-            'border-2 border-gray-300 rounded-lg p-6 text-center bg-card transition-colors duration-300 text-foreground',
-            className,
-            isSuccess ? 'border-solid' : 'border-dashed',
-            isActive && 'border-primary bg-primary/10',
-            isInvalid && 'border-destructive bg-destructive/10'
-          ),
-        })}
+        {...getRootProps()}
+        className={cn(
+          'border-2 border-gray-300 rounded-lg p-6 text-center bg-card transition-colors duration-300 text-foreground',
+          className,
+          isSuccess ? 'border-solid' : 'border-dashed',
+          isActive && 'border-primary bg-primary/10',
+          isInvalid && 'border-destructive bg-destructive/10'
+        )}
       >
         <input {...getInputProps()} />
         {children}
@@ -107,6 +106,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
           >
             {file.type.startsWith('image/') ? (
               <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-muted flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={file.preview} alt={file.name} className="object-cover" />
               </div>
             ) : (

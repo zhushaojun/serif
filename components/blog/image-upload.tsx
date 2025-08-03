@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/ui/dropzone'
 import { useSupabaseUpload } from '@/hooks/use-supabase-upload'
 import { createClient } from '@/lib/client'
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Upload, X, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 
 interface ImageUploadProps {
   defaultValue?: string
@@ -28,15 +29,7 @@ export function ImageUpload({ defaultValue = '', onChange, disabled = false }: I
     maxFileSize: 5 * 1024 * 1024, // 5MB
   })
 
-  // 当上传成功时，生成公共 URL
-  useEffect(() => {
-    if (uploadProps.isSuccess && uploadProps.uploadedPaths.length > 0) {
-      const uploadedPath = uploadProps.uploadedPaths[0]
-      generatePublicUrl(uploadedPath.filePath)
-    }
-  }, [uploadProps.isSuccess, uploadProps.uploadedPaths])
-
-  const generatePublicUrl = (filePath: string) => {
+  const generatePublicUrl = useCallback((filePath: string) => {
     try {
       const { data } = supabase.storage
         .from('blog-images')
@@ -48,7 +41,15 @@ export function ImageUpload({ defaultValue = '', onChange, disabled = false }: I
     } catch (error) {
       console.error('Error generating public URL:', error)
     }
-  }
+  }, [onChange, supabase.storage])
+
+  // 当上传成功时，生成公共 URL
+  useEffect(() => {
+    if (uploadProps.isSuccess && uploadProps.uploadedPaths.length > 0) {
+      const uploadedPath = uploadProps.uploadedPaths[0]
+      generatePublicUrl(uploadedPath.filePath)
+    }
+  }, [uploadProps.isSuccess, uploadProps.uploadedPaths, generatePublicUrl])
 
   const handleManualUrlChange = (url: string) => {
     setManualUrl(url)
@@ -148,9 +149,11 @@ export function ImageUpload({ defaultValue = '', onChange, disabled = false }: I
             </Button>
           </div>
           <div className="border rounded-lg overflow-hidden bg-muted">
-            <img
+            <Image
               src={imageUrl}
               alt="预览"
+              width={400}
+              height={192}
               className="w-full h-48 object-cover"
               onError={() => {
                 console.error('Image failed to load:', imageUrl)

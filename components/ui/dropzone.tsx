@@ -2,8 +2,8 @@
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, File, Loader2, Upload, X } from 'lucide-react'
-import { createContext, type PropsWithChildren, useCallback, useContext, useRef } from 'react'
+import { CheckCircle, File, Upload, X } from 'lucide-react'
+import { createContext, type PropsWithChildren, useCallback, useContext } from 'react'
 import type { UseSupabaseUploadReturn, FileWithErrors } from '@/hooks/use-supabase-upload'
 
 export const formatBytes = (
@@ -111,10 +111,8 @@ const DropzoneContent = ({ className }: { className?: string }) => {
   const { 
     files,
     setFiles,
-    onUpload,
     loading,
     successes,
-    errors,
     maxFileSize,
     maxFiles,
     isSuccess,
@@ -143,7 +141,6 @@ const DropzoneContent = ({ className }: { className?: string }) => {
   return (
     <div className={cn('flex flex-col', className)}>
       {files.map((file, idx) => {
-        const fileError = errors.find((e) => e.name === file.name)
         const isSuccessfullyUploaded = !!successes.find((e) => e === file.name)
 
         return (
@@ -153,6 +150,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
           >
             {file.type.startsWith('image/') ? (
               <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-muted flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={file.preview} alt={file.name} className="object-cover" />
               </div>
             ) : (

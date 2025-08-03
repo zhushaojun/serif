@@ -23,6 +23,9 @@ export default function SiteHeader() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
+            <Link href="/blogs" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              博客
+            </Link>
             <Link href="/features" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
               Features
             </Link>
@@ -62,6 +65,13 @@ export default function SiteHeader() {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pt-4 border-t border-gray-200/50">
             <nav className="flex flex-col gap-4">
+              <Link 
+                href="/blogs" 
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                博客
+              </Link>
               <Link 
                 href="/features" 
                 className="text-gray-600 hover:text-gray-900 transition-colors font-medium py-2"

@@ -36,9 +36,23 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // 定义不需要认证的公开路径
+  const publicPaths = [
+    '/',
+    '/blogs',
+    '/blog',
+    '/design-system',
+    '/test-editor'
+  ]
+  
+  const isPublicPath = publicPaths.some(path => 
+    request.nextUrl.pathname === path || 
+    request.nextUrl.pathname.startsWith(path + '/')
+  )
+
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
+    !isPublicPath &&
     !request.nextUrl.pathname.startsWith('/auth')
   ) {
     // no user, potentially respond by redirecting the user to the login page
