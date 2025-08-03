@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-import { Home, FileText, Settings, User, LogOut } from 'lucide-react'
+import { Home, FileText, Settings, User, LogOut, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/client'
@@ -28,6 +28,11 @@ const sidebarNavItems: SidebarNavItem[] = [
     title: '博客',
     href: '/dashboard/blogs',
     icon: FileText,
+  },
+  {
+    title: 'AI 聊天',
+    href: '/chat',
+    icon: MessageSquare,
   },
   {
     title: '设置',
