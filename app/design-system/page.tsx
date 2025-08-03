@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Copy, Check, Palette, Type, Layout, Package } from 'lucide-react'
+import { BlogCard } from '@/components/blog/blog-card'
 
 export default function DesignSystemPage() {
   const [copiedText, setCopiedText] = useState<string | null>(null)
@@ -253,6 +254,62 @@ export default function DesignSystemPage() {
                   </p>
                 </CardContent>
               </Card>
+            </div>
+          </div>
+
+          {/* Blog Cards */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-medium text-foreground">博客卡片</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <BlogCard 
+                blog={{
+                  id: '1',
+                  title: 'Getting Started with Next.js 14',
+                  subtitle: 'Learn the fundamentals of modern web development',
+                  slug: 'getting-started-nextjs-14',
+                  content: 'This is a comprehensive guide to getting started with Next.js 14. We will cover the basics of setting up a project, understanding the app router, and building your first components. The new features in Next.js 14 bring significant improvements to performance and developer experience.',
+                  author: 'John Doe',
+                  author_id: 'user-1',
+                  category: 'design',
+                  image: '/images/hero-background.jpg',
+                  created_at: '2025-06-18T10:00:00Z',
+                  updated_at: '2025-06-18T10:00:00Z'
+                }}
+                showActions={false}
+              />
+              
+              <BlogCard 
+                blog={{
+                  id: '2',
+                  title: '构建现代化的用户界面',
+                  subtitle: '使用 React 和 Tailwind CSS 创建优美的组件',
+                  slug: 'building-modern-ui',
+                  content: '在这篇文章中，我们将探讨如何使用现代化的工具和技术来构建用户界面。我们将涵盖设计原则、组件架构和样式系统。',
+                  author: '张三',
+                  author_id: 'user-2',
+                  category: 'tech',
+                  created_at: '2025-06-17T14:30:00Z',
+                  updated_at: '2025-06-17T14:30:00Z'
+                }}
+                showActions={false}
+              />
+              
+              <BlogCard 
+                blog={{
+                  id: '3',
+                  title: 'Design System Best Practices',
+                  subtitle: 'Creating consistent and scalable design systems',
+                  slug: 'design-system-best-practices',
+                  content: 'A well-structured design system is the foundation of any successful product. It ensures consistency, speeds up development, and improves collaboration between designers and developers.',
+                  author: 'Designer Pro',
+                  author_id: 'user-3',
+                  category: 'lifestyle',
+                  image: '/images/hero-background.jpg',
+                  created_at: '2025-06-16T09:15:00Z',
+                  updated_at: '2025-06-16T09:15:00Z'
+                }}
+                showActions={false}
+              />
             </div>
           </div>
         </section>

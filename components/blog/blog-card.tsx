@@ -1,10 +1,12 @@
 'use client'
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Calendar, Clock, Edit, Eye, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { formatDate } from '@/lib/utils'
 import { Blog } from '@/types/database'
 import { deleteBlogAndRedirect } from '@/lib/actions/blog-actions'
@@ -57,7 +59,7 @@ export function BlogCard({ blog, showActions = true }: BlogCardProps) {
       .replace(/\s+/g, ' ')            // 规范化空白字符
       .trim()                          // 移除首尾空格
     
-    return text.length > 150 ? text.substring(0, 150) + '...' : text
+    return text.length > 120 ? text.substring(0, 120) + '...' : text
   }
 
   // 计算阅读时间（基于内容长度，统一处理避免SSR不匹配）
@@ -87,71 +89,99 @@ export function BlogCard({ blog, showActions = true }: BlogCardProps) {
   const readTime = calculateReadTime(blog.content)
 
   return (
-    <Card className="group hover:shadow-md transition-shadow">
-      <CardHeader className="space-y-3">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1 flex-1">
-            <h3 className="font-semibold line-clamp-2 group-hover:text-primary transition-colors">
-              {blog.title}
-            </h3>
-            {blog.subtitle && (
-              <p className="text-sm text-muted-foreground line-clamp-1">
-                {blog.subtitle}
-              </p>
-            )}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {formatDate(blog.created_at)}
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {readTime} 分钟
-              </div>
+    <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden border-0 shadow-sm">
+      {/* 封面图片 */}
+      <div className="relative h-48 w-full overflow-hidden">
+        {blog.image ? (
+          <Image
+            src={blog.image}
+            alt={blog.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-red-400 via-red-500 to-red-600 flex items-center justify-center">
+            <div className="text-white text-2xl font-bold opacity-80">
+              {blog.title.charAt(0).toUpperCase()}
             </div>
           </div>
-          <Badge variant="default" className="ml-2">
-            已发布
-          </Badge>
+        )}
+        
+        {/* 浮动标签 */}
+        {blog.category && (
+          <div className="absolute top-3 left-3">
+            <Badge variant="secondary" className="bg-black/20 text-white border-0 backdrop-blur-sm">
+              {blog.category}
+            </Badge>
+          </div>
+        )}
+      </div>
+
+      <CardContent className="p-6">
+        {/* 阅读时间 */}
+        <div className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
+          <Clock className="h-3 w-3" />
+          {readTime} min read
         </div>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground line-clamp-3">
+
+        {/* 标题和副标题 */}
+        <div className="space-y-2 mb-4">
+          <h3 className="font-bold text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+            {blog.title}
+          </h3>
+          {blog.subtitle && (
+            <p className="text-muted-foreground text-sm line-clamp-2">
+              {blog.subtitle}
+            </p>
+          )}
+        </div>
+
+        {/* 内容摘录 */}
+        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
           {excerpt}
         </p>
-        
-        {blog.author && (
-          <div className="text-sm text-muted-foreground">
-            作者：{blog.author}
+
+        {/* 作者信息 */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="" alt={blog.author} />
+              <AvatarFallback className="text-xs bg-red-100 text-red-700">
+                {blog.author.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">{blog.author}</span>
+              <span className="text-xs text-muted-foreground">
+                {formatDate(blog.created_at)}
+              </span>
+            </div>
           </div>
-        )}
-        
-        {showActions && (
-          <div className="flex items-center gap-2 pt-2">
-            <Button size="sm" variant="outline" asChild>
-              <Link href={`/dashboard/blogs/${blog.id}/edit`}>
-                <Edit className="h-3 w-3 mr-1" />
-                编辑
-              </Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link href={`/blog/${blog.slug}`} target="_blank">
-                <Eye className="h-3 w-3 mr-1" />
-                查看
-              </Link>
-            </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="text-red-600 hover:text-red-700"
-              onClick={handleDelete}
-            >
-              <Trash2 className="h-3 w-3 mr-1" />
-              删除
-            </Button>
-          </div>
-        )}
+
+          {showActions && (
+            <div className="flex items-center gap-1">
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0" asChild>
+                <Link href={`/dashboard/blogs/${blog.id}/edit`}>
+                  <Edit className="h-3 w-3" />
+                </Link>
+              </Button>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0" asChild>
+                <Link href={`/blog/${blog.slug}`} target="_blank">
+                  <Eye className="h-3 w-3" />
+                </Link>
+              </Button>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={handleDelete}
+              >
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   )

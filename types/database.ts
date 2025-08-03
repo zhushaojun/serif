@@ -12,6 +12,7 @@ export interface Blog {
   content: string
   author: string
   author_id: string
+  category?: string
   created_at: string
   updated_at: string
 }

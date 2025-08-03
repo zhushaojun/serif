@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { TiptapEditor } from './tiptap-editor'
+import { ImageUpload } from './image-upload'
 import { Blog } from '@/types/database'
 import { BlogOperationResult } from '@/types/blogs'
 import { generateSlug } from '@/lib/slug-generator'
@@ -123,20 +125,10 @@ export function BlogForm({ blog, action, title, isEditing = false }: BlogFormPro
             </div>
 
             {/* 封面图片字段 */}
-            <div className="space-y-2">
-              <Label htmlFor="image">封面图片 URL</Label>
-              <Input
-                id="image"
-                name="image"
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                defaultValue={blog?.image || ''}
-                disabled={isPending}
-              />
-              <p className="text-sm text-gray-500">
-                请输入图片的完整 URL 地址
-              </p>
-            </div>
+            <ImageUpload
+              defaultValue={blog?.image || ''}
+              disabled={isPending}
+            />
 
             {/* 作者字段 */}
             <div className="space-y-2">
@@ -151,6 +143,23 @@ export function BlogForm({ blog, action, title, isEditing = false }: BlogFormPro
                 maxLength={100}
                 disabled={isPending}
               />
+            </div>
+
+            {/* 分类字段 */}
+            <div className="space-y-2">
+              <Label htmlFor="category">分类</Label>
+              <Select name="category" defaultValue={blog?.category || 'design'} disabled={isPending}>
+                <SelectTrigger>
+                  <SelectValue placeholder="选择分类" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="design">设计</SelectItem>
+                  <SelectItem value="tech">技术</SelectItem>
+                  <SelectItem value="lifestyle">生活</SelectItem>
+                  <SelectItem value="tutorial">教程</SelectItem>
+                  <SelectItem value="news">资讯</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* 内容编辑器 */}
