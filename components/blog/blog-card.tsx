@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
 import { Blog } from '@/types/database'
 import { deleteBlogAndRedirect } from '@/lib/actions/blog-actions'
+import { toast } from 'sonner'
 
 interface BlogCardProps {
   blog: Blog
@@ -15,6 +16,29 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ blog, showActions = true }: BlogCardProps) {
+  // 处理删除操作
+  const handleDelete = async () => {
+    if (!confirm('确定要删除这篇博客吗？此操作不可撤销。')) {
+      return
+    }
+
+    try {
+      toast.promise(
+        deleteBlogAndRedirect(blog.id),
+        {
+          loading: '正在删除博客...',
+          success: '博客删除成功！',
+          error: '删除博客失败，请重试。',
+        }
+      )
+    } catch (error) {
+      console.error('删除博客时出错:', error)
+      toast.error('删除博客失败', {
+        description: '请稍后重试或联系管理员。'
+      })
+    }
+  }
+
   // 从HTML内容中提取纯文本作为摘录（统一处理，避免SSR不匹配）
   const getExcerpt = (content: string) => {
     if (!content || typeof content !== 'string') {
@@ -22,7 +46,7 @@ export function BlogCard({ blog, showActions = true }: BlogCardProps) {
     }
     
     // 统一使用服务器端的处理方式，避免hydration mismatch
-    let text = content
+    const text = content
       .replace(/<[^>]*>/g, '')           // 移除HTML标签
       .replace(/&nbsp;/g, ' ')          // 替换HTML实体
       .replace(/&amp;/g, '&')          // 替换&符号
@@ -117,22 +141,15 @@ export function BlogCard({ blog, showActions = true }: BlogCardProps) {
                 查看
               </Link>
             </Button>
-            <form action={deleteBlogAndRedirect.bind(null, blog.id)} className="inline">
-              <Button 
-                type="submit" 
-                size="sm" 
-                variant="outline" 
-                className="text-red-600 hover:text-red-700"
-                onClick={(e) => {
-                  if (!confirm('确定要删除这篇博客吗？此操作不可撤销。')) {
-                    e.preventDefault()
-                  }
-                }}
-              >
-                <Trash2 className="h-3 w-3 mr-1" />
-                删除
-              </Button>
-            </form>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="text-red-600 hover:text-red-700"
+              onClick={handleDelete}
+            >
+              <Trash2 className="h-3 w-3 mr-1" />
+              删除
+            </Button>
           </div>
         )}
       </CardContent>

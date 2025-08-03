@@ -136,3 +136,32 @@
     -webkit-line-clamp: 3;
   }
 }
+
+/* Sonner toast 样式 */
+[data-sonner-toaster] {
+  z-index: 9999;
+}
+
+[data-sonner-toaster][data-theme='light'] {
+  --normal-bg: hsl(var(--background));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--foreground));
+  --success-bg: hsl(120, 100%, 97%);
+  --success-border: hsl(120, 100%, 88%);
+  --success-text: hsl(120, 100%, 20%);
+  --error-bg: hsl(0, 100%, 97%);
+  --error-border: hsl(0, 100%, 88%);
+  --error-text: hsl(0, 100%, 30%);
+}
+
+[data-sonner-toaster][data-theme='dark'] {
+  --normal-bg: hsl(var(--background));
+  --normal-border: hsl(var(--border));
+  --normal-text: hsl(var(--foreground));
+  --success-bg: hsl(120, 100%, 10%);
+  --success-border: hsl(120, 100%, 20%);
+  --success-text: hsl(120, 100%, 90%);
+  --error-bg: hsl(0, 100%, 10%);
+  --error-border: hsl(0, 100%, 20%);
+  --error-text: hsl(0, 100%, 90%);
+}

@@ -41,6 +41,9 @@ importers:
       '@tiptap/extension-link':
         specifier: ^3.0.9
         version: 3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))(@tiptap/pm@3.0.9)
+      '@tiptap/extension-placeholder':
+        specifier: ^3.0.9
+        version: 3.0.9(@tiptap/extensions@3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))(@tiptap/pm@3.0.9))
       '@tiptap/extension-text-style':
         specifier: ^3.0.9
         version: 3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))
@@ -77,6 +80,9 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -830,6 +836,11 @@ packages:
     resolution: {integrity: sha512-K5zGg4zLxxqAG0BgtRpLvKclYSGoSSuU1Fza0M5MwUgrFA0S2q4JnLB1czQ77S4pfb3hpScIe50fwJzZmIUEQw==}
     peerDependencies:
       '@tiptap/core': ^3.0.9
+
+  '@tiptap/extension-placeholder@3.0.9':
+    resolution: {integrity: sha512-OgDVijDrNFDJpe/1/yMx6VFEmGBt0vE6ZWw5kGkM4NVfOxhRvv6mSZXio269dc9oBSjmyTISKaI1JAYVCfyJIw==}
+    peerDependencies:
+      '@tiptap/extensions': ^3.0.9
 
   '@tiptap/extension-strike@3.0.9':
     resolution: {integrity: sha512-2TBQ9P/FGe+/34ckfwP+eCdb4vbxDVZ5qD0piDIR9Ws5QI5IdtW90pNO4roxiPeRdVFrhTbFPEIuL0tg4NQRmg==}
@@ -2254,6 +2265,12 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
+  sonner@2.0.7:
+    resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -3061,6 +3078,10 @@ snapshots:
   '@tiptap/extension-paragraph@3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))':
     dependencies:
       '@tiptap/core': 3.0.9(@tiptap/pm@3.0.9)
+
+  '@tiptap/extension-placeholder@3.0.9(@tiptap/extensions@3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))(@tiptap/pm@3.0.9))':
+    dependencies:
+      '@tiptap/extensions': 3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))(@tiptap/pm@3.0.9)
 
   '@tiptap/extension-strike@3.0.9(@tiptap/core@3.0.9(@tiptap/pm@3.0.9))':
     dependencies:
@@ -4756,6 +4777,11 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
     optional: true
+
+  sonner@2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   source-map-js@1.2.1: {}
 

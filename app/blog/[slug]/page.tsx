@@ -2,6 +2,7 @@ import { getBlogBySlug } from '@/lib/actions/blog-actions'
 import { formatDate } from '@/lib/utils'
 import { Calendar, Clock, User } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 
 interface BlogPageProps {
   params: Promise<{
@@ -71,11 +72,13 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
         {/* 封面图片 */}
         {blog.image && (
-          <div className="aspect-video overflow-hidden rounded-lg bg-muted">
-            <img
+          <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+            <Image
               src={blog.image}
               alt={blog.title}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         )}

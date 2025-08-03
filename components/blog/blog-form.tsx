@@ -1,19 +1,21 @@
 'use client'
 
 import { useState, useActionState, useEffect } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { SimpleEditor } from './simple-editor'
+import { TiptapEditor } from './tiptap-editor'
 import { Blog } from '@/types/database'
+import { BlogOperationResult } from '@/types/blogs'
 import { generateSlug } from '@/lib/slug-generator'
 import { Save, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface BlogFormProps {
   blog?: Blog
-  action: (formData: FormData) => Promise<any>
+  action: (prevState: BlogOperationResult | null, formData: FormData) => Promise<BlogOperationResult>
   title: string
   isEditing?: boolean
 }
@@ -23,7 +25,7 @@ export function BlogForm({ blog, action, title, isEditing = false }: BlogFormPro
   const [content, setContent] = useState(blog?.content || '')
   const [titleValue, setTitleValue] = useState(blog?.title || '')
   const [slugPreview, setSlugPreview] = useState('')
-  const [state, formAction, isPending] = useActionState(action, { success: true })
+  const [state, formAction, isPending] = useActionState(action, null)
 
   // 实时生成slug预览
   useEffect(() => {
@@ -34,6 +36,18 @@ export function BlogForm({ blog, action, title, isEditing = false }: BlogFormPro
       setSlugPreview('')
     }
   }, [titleValue])
+
+  // 只处理错误情况的toast通知（成功情况由重定向后的ToastHandler处理）
+  useEffect(() => {
+    // 确保state不为null且操作已完成且有错误时才显示toast
+    if (state && !isPending && state.error && !state.success) {
+      toast.error(isEditing ? '博客更新失败' : '博客创建失败', {
+        description: state.error
+      })
+    }
+  }, [state, isPending, isEditing])
+
+
 
   const handleCancel = () => {
     router.push('/dashboard/blogs')
@@ -67,12 +81,7 @@ export function BlogForm({ blog, action, title, isEditing = false }: BlogFormPro
               </div>
             )}
             
-            {/* 显示成功信息 */}
-            {state && state.success && state.data && !isEditing && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg">
-                博客创建成功！
-              </div>
-            )}
+
 
             {/* 标题字段 */}
             <div className="space-y-2">
@@ -147,7 +156,7 @@ export function BlogForm({ blog, action, title, isEditing = false }: BlogFormPro
             {/* 内容编辑器 */}
             <div className="space-y-2">
               <Label htmlFor="content">博客内容 *</Label>
-              <SimpleEditor
+              <TiptapEditor
                 content={content}
                 onChange={setContent}
                 placeholder="开始编写你的博客内容..."

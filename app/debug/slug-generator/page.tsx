@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { generateSlug, generateShortSlug, isValidSlug, previewSlug } from '@/lib/slug-generator'
+import { previewSlug } from '@/lib/slug-generator'
+import { toast } from 'sonner'
 
 export default function SlugGeneratorPage() {
   const [title, setTitle] = useState('')
@@ -16,6 +17,13 @@ export default function SlugGeneratorPage() {
     if (title.trim()) {
       const slugResult = previewSlug(title.trim())
       setResult(slugResult)
+      toast.success('Slug 生成成功！', {
+        description: `生成的标准slug: ${slugResult.normal}`
+      })
+    } else {
+      toast.error('请输入标题', {
+        description: '需要输入博客标题才能生成slug'
+      })
     }
   }
 
@@ -131,7 +139,7 @@ export default function SlugGeneratorPage() {
                     </div>
                     <div>
                       <span className="text-gray-600">有效:</span>{' '}
-                      <Badge size="sm" variant={example.isValid ? 'default' : 'destructive'}>
+                      <Badge variant={example.isValid ? 'default' : 'destructive'}>
                         {example.isValid ? '是' : '否'}
                       </Badge>
                     </div>

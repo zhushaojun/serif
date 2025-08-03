@@ -1,11 +1,12 @@
 'use client'
 
 import { useEditor, EditorContent } from '@tiptap/react'
-import { BubbleMenu } from '@tiptap/extension-bubble-menu'
+import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
+import Placeholder from '@tiptap/extension-placeholder'
 import { 
   Bold, 
   Italic, 
@@ -50,6 +51,9 @@ export function TiptapEditor({ content, onChange, placeholder = '开始编写你
       }),
       TextStyle,
       Color,
+      Placeholder.configure({
+        placeholder,
+      }),
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -85,7 +89,7 @@ export function TiptapEditor({ content, onChange, placeholder = '开始编写你
 
   return (
     <div className={className}>
-      <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+      <BubbleMenu editor={editor}>
         <div className="flex items-center gap-1 p-2 bg-white border rounded-lg shadow-lg">
           <Button
             variant={editor.isActive('bold') ? 'default' : 'ghost'}

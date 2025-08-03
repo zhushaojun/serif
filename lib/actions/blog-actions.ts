@@ -88,7 +88,7 @@ export async function createBlog(formData: FormData): Promise<BlogOperationResul
     return { success: true, data }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     console.error('创建博客错误:', error)
     return { success: false, error: '创建博客时发生未知错误' }
@@ -144,7 +144,7 @@ export async function updateBlog(id: string, formData: FormData): Promise<BlogOp
     return { success: true, data }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     console.error('更新博客错误:', error)
     return { success: false, error: '更新博客时发生未知错误' }
@@ -291,11 +291,12 @@ export async function getBlogById(id: string): Promise<{ blog: Blog | null; erro
 /**
  * 创建博客后重定向到编辑页面
  */
-export async function createBlogAndRedirect(prevState: any, formData: FormData) {
+export async function createBlogAndRedirect(prevState: BlogOperationResult | null, formData: FormData) {
   const result = await createBlog(formData)
   
   if (result.success && result.data) {
-    redirect(`/dashboard/blogs/${result.data.id}/edit`)
+    const timestamp = Date.now()
+    redirect(`/dashboard/blogs/${result.data.id}/edit?success=true&action=create&t=${timestamp}`)
   }
   
   return result
@@ -304,11 +305,12 @@ export async function createBlogAndRedirect(prevState: any, formData: FormData) 
 /**
  * 更新博客后重定向到列表页面
  */
-export async function updateBlogAndRedirect(id: string, prevState: any, formData: FormData) {
+export async function updateBlogAndRedirect(id: string, prevState: BlogOperationResult | null, formData: FormData) {
   const result = await updateBlog(id, formData)
   
   if (result.success) {
-    redirect('/dashboard/blogs')
+    const timestamp = Date.now()
+    redirect(`/dashboard/blogs?success=true&action=update&t=${timestamp}`)
   }
   
   return result
@@ -321,7 +323,8 @@ export async function deleteBlogAndRedirect(id: string) {
   const result = await deleteBlog(id)
   
   if (result.success) {
-    redirect('/dashboard/blogs')
+    const timestamp = Date.now()
+    redirect(`/dashboard/blogs?success=true&action=delete&t=${timestamp}`)
   }
   
   return result

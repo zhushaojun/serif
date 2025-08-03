@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/server'
 import { Sidebar } from '@/components/dashboard/sidebar'
+import { ToastHandler } from '@/components/dashboard/toast-handler'
+import { Suspense } from 'react'
 
 export default async function DashboardLayout({
   children,
@@ -23,6 +25,9 @@ export default async function DashboardLayout({
           {children}
         </div>
       </main>
+      <Suspense fallback={null}>
+        <ToastHandler />
+      </Suspense>
     </div>
   )
 } 
