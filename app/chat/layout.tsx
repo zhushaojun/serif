@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/server'
-import { Suspense } from 'react'
 
 export default async function ChatLayout({
   children,

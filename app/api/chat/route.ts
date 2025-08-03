@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     // 使用 AI SDK 5.0 创建流式响应 - 明确使用聊天API
     // 注意：目前只有兼容OpenAI格式的模型可以直接使用
     // 其他模型需要配置对应的提供者
-    let modelToUse = selectedModel
+    const modelToUse = selectedModel
     if (!['gpt-3.5-turbo', 'gpt-4', 'gpt-4-turbo'].includes(selectedModel)) {
       // 对于自定义模型，假设它们兼容OpenAI格式
       console.log('Using custom model:', selectedModel)
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
             const userMessage = messages[messages.length - 1]
             if (userMessage && userMessage.role === 'user') {
               // 从 parts 中提取文本内容
-              const textPart = userMessage.parts?.find((p: any) => p.type === 'text')
+              const textPart = userMessage.parts?.find((p: { type: string; text?: string }) => p.type === 'text')
               const content = textPart?.text || ''
               
               await supabase.from('messages').insert({

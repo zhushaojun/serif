@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { ChatSidebar } from '@/components/chat/chat-sidebar'
 import { Message } from '@/components/chat/message'
@@ -16,7 +16,6 @@ interface ChatPageProps {
 export default function ChatPage({ params }: ChatPageProps) {
   const [chatId, setChatId] = useState<string>('')
   const [chats, setChats] = useState<ChatWithLastMessage[]>([])
-  const [initialMessages, setInitialMessages] = useState<MessageType[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [input, setInput] = useState('')
   const [isAiLoading, setIsAiLoading] = useState(false)
@@ -25,7 +24,6 @@ export default function ChatPage({ params }: ChatPageProps) {
   // 使用 AI SDK 5.0 的 useChat hook
   const {
     messages,
-    sendMessage,
     setMessages,
   } = useChat({
     onError: (error) => {
@@ -59,7 +57,7 @@ export default function ChatPage({ params }: ChatPageProps) {
   }
 
   // 加载初始消息
-  const loadMessages = async (id: string) => {
+  const loadMessages = useCallback(async (id: string) => {
     if (!id) return
     
     // 检查是否是有效的UUID格式
@@ -73,7 +71,6 @@ export default function ChatPage({ params }: ChatPageProps) {
     
     try {
       const messagesData = await getChatMessages(id)
-      setInitialMessages(messagesData)
       
       // 如果聊天不存在，getChatMessages 应该返回空数组
       // 但我们需要额外验证聊天是否真的存在
@@ -105,7 +102,7 @@ export default function ChatPage({ params }: ChatPageProps) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [setMessages])
 
   // 当聊天 ID 变化时，加载数据
   useEffect(() => {
@@ -114,7 +111,7 @@ export default function ChatPage({ params }: ChatPageProps) {
       loadChats()
       loadMessages(chatId)
     }
-  }, [chatId])
+  }, [chatId, loadMessages])
 
   // 自动滚动到底部
   useEffect(() => {
@@ -258,7 +255,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 
               const decoder = new TextDecoder()
               let aiResponse = ''
-              let aiMessageId = (Date.now() + 1).toString()
+              const aiMessageId = (Date.now() + 1).toString()
 
               try {
                 while (true) {

@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { AI_MODELS, type AIModelKey } from '@/types/chats'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 

@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import { Plus, MessageSquare, Trash2, MoreHorizontal, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -41,7 +40,7 @@ export function ChatSidebar({ chats }: ChatSidebarProps) {
       } else {
         toast.error(result.error || 'Failed to create chat')
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to create chat')
     } finally {
       setIsCreating(false)
@@ -60,7 +59,7 @@ export function ChatSidebar({ chats }: ChatSidebarProps) {
       } else {
         toast.error(result.error || 'Failed to delete chat')
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete chat')
     }
   }
